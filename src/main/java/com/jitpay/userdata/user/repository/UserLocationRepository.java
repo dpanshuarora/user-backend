@@ -34,4 +34,17 @@ public class UserLocationRepository {
 
   }
 
+  public User findUserWithLatestLocation(String userId) {
+    Session session = entityManager.unwrap(Session.class);
+    session.enableFilter("latestLocationFilter");
+
+    TypedQuery<User> query = entityManager.createQuery(
+        "SELECT user FROM User user where user.userId = :userId", User.class);
+
+    return query
+        .setParameter("userId", userId)
+        .getResultList()
+        .stream().findFirst().orElse(null);
+
+  }
 }

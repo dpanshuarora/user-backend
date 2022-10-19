@@ -58,4 +58,16 @@ class UserLocationRepositoryTest {
     verify(filter).setParameter("dateTimeEnd", Timestamp.valueOf("2022-01-07 00:00:10"));
   }
 
+  @Test
+  void setFiltersAndParamsForFindUserWithLatestLocationQuery() {
+    when(session.enableFilter(anyString())).thenReturn(filter);
+    when(entityManager.createQuery(any(), any())).thenReturn(typedQuery);
+    when(typedQuery.setParameter(anyString(), anyString())).thenReturn(typedQuery);
+    when(typedQuery.getResultList()).thenReturn(new ArrayList());
+
+    userLocationRepository.findUserWithLatestLocation("user-id");
+
+    verify(session).enableFilter("latestLocationFilter");
+    verify(typedQuery).setParameter("userId", "user-id");
+  }
 }
