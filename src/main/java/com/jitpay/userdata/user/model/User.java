@@ -12,19 +12,27 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Filter;
 
+/** Represents the user entity as stored in user_t. It also stores the join relationship with location_t
+ * @author deepanshu961@gmail.com
+ * @version 1
+ */
 @Entity
 @Table(name = "USER_T")
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
 public class User implements Serializable {
+
+  public User(String userId, Timestamp createdOn, String email, String firstName, String secondName) {
+    this.userId = userId;
+    this.createdOn = createdOn;
+    this.email = email;
+    this.firstName = firstName;
+    this.secondName = secondName;
+  }
 
   @Id
   @JsonView({View.UserAndLocationInRange.class, View.UserAndLatestLocation.class})
