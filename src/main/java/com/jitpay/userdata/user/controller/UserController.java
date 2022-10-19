@@ -31,4 +31,19 @@ public class UserController {
 
   }
 
+  @GetMapping("/user/locations")
+  @JsonView(View.UserAndLocationInRange.class)
+  public @ResponseBody
+  User getUserLocationsBetweenTimeRange(@RequestParam String userId,
+      @RequestParam Timestamp dateTimeStart, @RequestParam Timestamp dateTimeEnd)
+      throws StartDateAfterEndDateException {
+
+    if (dateTimeStart.after(dateTimeEnd)) {
+      throw new StartDateAfterEndDateException();
+    }
+
+    return userLocationRepository.getUserLocationsBetweenDateTimeRange(userId, dateTimeStart, dateTimeEnd);
+
+  }
+
 }
