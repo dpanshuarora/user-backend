@@ -24,6 +24,13 @@ import org.hibernate.annotations.ParamDef;
 @Getter
 @Setter
 @Table(name = "LOCATION_T")
+@FilterDef(name="createdOnFilter", parameters={@ParamDef( name="dateTimeStart", type="timestamp" ),
+    @ParamDef( name="dateTimeEnd", type="timestamp" )},
+    defaultCondition = "created_on between :dateTimeStart and :dateTimeEnd")
+@FilterDef(name="latestLocationFilter",
+    defaultCondition = "created_on = ( SELECT MAX(location_t.created_on) " +
+    "FROM location_t " +
+    "where USER_ID = location_t.USER_ID)")
 public class Location implements Serializable {
 
   @Id
