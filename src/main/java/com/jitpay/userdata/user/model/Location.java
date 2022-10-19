@@ -20,6 +20,12 @@ import lombok.Setter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 
+/** Represents the location entity as stored in location_t. It also stores the join relationship with
+ * user_t and the filters defined using sql
+ * @author deepanshu961@gmail.com
+ * @version 1
+ */
+
 @Entity
 @Getter
 @Setter

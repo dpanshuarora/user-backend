@@ -16,7 +16,7 @@ public class ApiExceptionHandler {
 
   @ExceptionHandler(StartDateAfterEndDateException.class)
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-  public ResponseEntity<Object> handleValidationError(Exception ex) {
+  public ResponseEntity<Object> handleInvalidTimestamp(Exception ex) {
     return createPayload(ex, "dateTimeStart cannot be greater then dateTimeEnd",
         HttpStatus.BAD_REQUEST);
   }
