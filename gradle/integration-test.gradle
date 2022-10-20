@@ -1,0 +1,39 @@
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file("src/integration-test/java")
+        }
+        resources.srcDir file("src/main/resources")
+        resources.srcDir file("src/integration-test/resources")
+    }
+}
+
+configurations {
+    integrationTestRuntime.extendsFrom testRuntimeOnly
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestAnnotationProcessor.extendsFrom testAnnotationProcessor
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat = 'full'
+    }
+    // These tests cannot run in parallel
+    maxParallelForks = 1
+}
+
+dependencies {
+    integrationTestImplementation "org.awaitility:awaitility:4.2.0"
+    integrationTestImplementation "com.h2database:h2"
+    integrationTestAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    integrationTestCompileOnly group: "com.squareup.okhttp3", name: "mockwebserver", version: "4.0.1"
+    integrationTestCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+}
+
