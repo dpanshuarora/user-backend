@@ -30,7 +30,6 @@ task integrationTest(type: Test) {
 }
 
 dependencies {
-    integrationTestImplementation "org.awaitility:awaitility:4.2.0"
     integrationTestImplementation "com.h2database:h2"
     integrationTestAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     integrationTestCompileOnly group: "com.squareup.okhttp3", name: "mockwebserver", version: "4.0.1"
