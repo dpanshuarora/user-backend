@@ -1,0 +1,10 @@
+version: '2'
+services:
+  postgres:
+    build:
+#      context: path/to/Dockerfile/dir
+      dockerfile: Dockerfile #here you specify the name of your Dockerfile file
+    env_file:
+      - database.env
+    ports:
+      - "5432:5432"
