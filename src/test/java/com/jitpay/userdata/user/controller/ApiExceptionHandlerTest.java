@@ -25,7 +25,7 @@ class ApiExceptionHandlerTest {
     ErrorResponseDto errorResponseDto = (ErrorResponseDto) responseEntity.getBody();
     assertEquals("Exception: validation error", errorResponseDto.getExceptionMessage());
     assertEquals(errorResponseDto.getFriendlyMessage(), "dateTimeStart cannot be greater then dateTimeEnd");
-    assertEquals(responseEntity.getStatusCode(), HttpStatus.BAD_GATEWAY);
+    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
   }
 
 }
