@@ -1,6 +1,8 @@
 package com.jitpay.userdata.user.model;
 
 import java.sql.Timestamp;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,8 +14,10 @@ import lombok.Getter;
 @Getter
 public class UserDto {
 
+  @NotNull
   private String userId;
 
+  @Valid
   private Timestamp createdOn;
 
   private String email;

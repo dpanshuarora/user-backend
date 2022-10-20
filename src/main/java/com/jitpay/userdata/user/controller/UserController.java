@@ -9,6 +9,7 @@ import com.jitpay.userdata.user.model.View;
 import com.jitpay.userdata.user.repository.UserLocationRepository;
 import java.net.URI;
 import java.sql.Timestamp;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ public class UserController {
   @JsonView(View.UserAndLocationInRange.class)
   public @ResponseBody
   User getUserLocationsBetweenTimeRange(@RequestParam String userId,
-      @RequestParam Timestamp dateTimeStart, @RequestParam Timestamp dateTimeEnd)
+      @RequestParam @Valid Timestamp dateTimeStart, @RequestParam @Valid Timestamp dateTimeEnd)
       throws StartDateAfterEndDateException {
 
     if (dateTimeStart.after(dateTimeEnd)) {
@@ -57,7 +58,7 @@ public class UserController {
   @PostMapping("/user")
   @JsonView(View.UserAndLocationInRange.class)
   public @ResponseBody
-  ResponseEntity<Object> saveOrUpdateUser(@RequestBody UserDto userDto) {
+  ResponseEntity<Object> saveOrUpdateUser(@RequestBody @Valid UserDto userDto) {
 
     User savedUser = userDataService.saveOrUpdateUser(userDto);
 
