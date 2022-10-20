@@ -1,10 +1,12 @@
 package com.jitpay.userdata.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jitpay.userdata.user.model.ErrorResponseDto;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -43,9 +45,9 @@ public class UserControllerTest {
     String baseUrl =
         "http://localhost:" + randomServerPort + "/user-management/user/latest-location";
 
-    String urlWithFirstUserId = baseUrl + "?userId=2e3b11b0-07a4-4873-8de5-d2ae2eab26b2";
+    String urlWithParams = baseUrl + "?userId=2e3b11b0-07a4-4873-8de5-d2ae2eab26b2";
     ResponseEntity<String> response = restTemplate
-        .exchange(new URI(urlWithFirstUserId), HttpMethod.GET, null, String.class);
+        .exchange(new URI(urlWithParams), HttpMethod.GET, null, String.class);
     String responseBody = response.getBody();
 
     assertEquals(
@@ -61,9 +63,9 @@ public class UserControllerTest {
     String baseUrl =
         "http://localhost:" + randomServerPort + "/user-management/user/latest-location";
 
-    String urlWithFirstUserId = baseUrl + "?userId=buuyby3-4d3d-dff5d-efff3f-3biufbhiu3if";
+    String urlWithParams = baseUrl + "?userId=buuyby3-4d3d-dff5d-efff3f-3biufbhiu3if";
     ResponseEntity<String> response = restTemplate
-        .exchange(new URI(urlWithFirstUserId), HttpMethod.GET, null, String.class);
+        .exchange(new URI(urlWithParams), HttpMethod.GET, null, String.class);
     String responseBody = response.getBody();
 
     assertEquals("{\"userId\":\"buuyby3-4d3d-dff5d-efff3f-3biufbhiu3if\",\"createdOn\":"
@@ -78,9 +80,9 @@ public class UserControllerTest {
     String baseUrl =
         "http://localhost:" + randomServerPort + "/user-management/user/latest-location";
 
-    String urlWithFirstUserId = baseUrl + "?userId=invalid-id";
+    String urlWithParams = baseUrl + "?userId=invalid-id";
     ResponseEntity<String> response = restTemplate
-        .exchange(new URI(urlWithFirstUserId), HttpMethod.GET, null, String.class);
+        .exchange(new URI(urlWithParams), HttpMethod.GET, null, String.class);
     String responseBody = response.getBody();
 
     assertNull(responseBody);
@@ -92,11 +94,11 @@ public class UserControllerTest {
       throws URISyntaxException {
     String baseUrl = "http://localhost:" + randomServerPort + "/user-management/user/locations";
 
-    String urlWithFirstUserId =
+    String urlWithParams =
         baseUrl + "?userId=8b8eh3j2-dhb3-8473-8ossh-d83n4h4hh4j4j4&dateTimeStart="
             + "2022-01-04%2000:05:06&dateTimeEnd=2022-01-06%2022:05:06";
     ResponseEntity<String> response = restTemplate
-        .exchange(new URI(urlWithFirstUserId), HttpMethod.GET, null, String.class);
+        .exchange(new URI(urlWithParams), HttpMethod.GET, null, String.class);
     String responseBody = response.getBody();
 
     assertEquals("{\"userId\":\"8b8eh3j2-dhb3-8473-8ossh-d83n4h4hh4j4j4\",\"locations\":"
@@ -112,11 +114,11 @@ public class UserControllerTest {
       throws URISyntaxException {
     String baseUrl = "http://localhost:" + randomServerPort + "/user-management/user/locations";
 
-    String urlWithFirstUserId =
+    String urlWithParams =
         baseUrl + "?userId=8b8eh3j2-dhb3-8473-8ossh-d83n4h4hh4j4j4&dateTimeStart="
             + "2022-01-09%2000:05:09&dateTimeEnd=2022-01-09%2022:05:06";
     ResponseEntity<String> response = restTemplate
-        .exchange(new URI(urlWithFirstUserId), HttpMethod.GET, null, String.class);
+        .exchange(new URI(urlWithParams), HttpMethod.GET, null, String.class);
     String responseBody = response.getBody();
 
     assertEquals("{\"userId\":\"8b8eh3j2-dhb3-8473-8ossh-d83n4h4hh4j4j4\",\"locations\":[]}",
@@ -130,11 +132,11 @@ public class UserControllerTest {
       throws URISyntaxException {
     String baseUrl = "http://localhost:" + randomServerPort + "/user-management/user/locations";
 
-    String urlWithFirstUserId =
+    String urlWithParams =
         baseUrl + "?userId=buuyby3-4d3d-dff5d-efff3f-3biufbhiu3if&dateTimeStart="
             + "2022-01-09%2000:05:09&dateTimeEnd=2022-01-09%2022:05:06";
     ResponseEntity<String> response = restTemplate
-        .exchange(new URI(urlWithFirstUserId), HttpMethod.GET, null, String.class);
+        .exchange(new URI(urlWithParams), HttpMethod.GET, null, String.class);
     String responseBody = response.getBody();
 
     assertEquals("{\"userId\":\"buuyby3-4d3d-dff5d-efff3f-3biufbhiu3if\",\"locations\":[]}",
@@ -143,14 +145,32 @@ public class UserControllerTest {
   }
 
   @Test
+  void shouldCreateErrorResponseWhenStartDateGreaterThanEndDate()
+      throws URISyntaxException {
+    String baseUrl = "http://localhost:" + randomServerPort + "/user-management/user/locations";
+
+    String urlWithParams =
+        baseUrl + "?userId=buuyby3-4d3d-dff5d-efff3f-3biufbhiu3if&dateTimeStart="
+            + "2022-03-09%2000:05:09&dateTimeEnd=2022-01-09%2022:05:06";
+    ResponseEntity<ErrorResponseDto> response = restTemplate
+        .exchange(new URI(urlWithParams), HttpMethod.GET, null, ErrorResponseDto.class);
+    ErrorResponseDto responseBody = response.getBody();
+
+    assertNotNull(responseBody);
+    assertEquals("dateTimeStart cannot be greater then dateTimeEnd",
+        responseBody.getFriendlyMessage());
+
+  }
+
+  @Test
   void shouldGetEmptyResponseWhenUserIdNotPresent()
       throws URISyntaxException {
     String baseUrl = "http://localhost:" + randomServerPort + "/user-management/user/locations";
 
-    String urlWithFirstUserId = baseUrl + "?userId=invalid-id&dateTimeStart="
+    String urlWithParams = baseUrl + "?userId=invalid-id&dateTimeStart="
         + "2022-01-09%2000:05:09&dateTimeEnd=2022-01-09%2022:05:06";
     ResponseEntity<String> response = restTemplate
-        .exchange(new URI(urlWithFirstUserId), HttpMethod.GET, null, String.class);
+        .exchange(new URI(urlWithParams), HttpMethod.GET, null, String.class);
     String responseBody = response.getBody();
 
     assertNull(responseBody);
