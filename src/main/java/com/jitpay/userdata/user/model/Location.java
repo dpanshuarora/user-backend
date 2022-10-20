@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 /** Represents the location entity as stored in location_t. It also stores the join relationship with
  * user_t and the filters defined using sql
@@ -29,13 +30,14 @@ import org.hibernate.annotations.ParamDef;
 @Entity
 @Getter
 @Setter
-@Table(name = "LOCATION_T")
+@Table(name = "LOCATION_T", schema = "logistics")
+@EnableAutoConfiguration
 @FilterDef(name="createdOnFilter", parameters={@ParamDef( name="dateTimeStart", type="timestamp" ),
     @ParamDef( name="dateTimeEnd", type="timestamp" )},
     defaultCondition = "created_on between :dateTimeStart and :dateTimeEnd")
 @FilterDef(name="latestLocationFilter",
     defaultCondition = "created_on = ( SELECT MAX(location_t.created_on) " +
-    "FROM location_t " +
+    "FROM logistics.location_t " +
     "where USER_ID = location_t.USER_ID)")
 public class Location implements Serializable {
 
@@ -43,7 +45,6 @@ public class Location implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private String id;
 
-  @Id
   private String userId;
 
   private Double latitude;

@@ -15,13 +15,15 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Filter;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 /** Represents the user entity as stored in user_t. It also stores the join relationship with location_t
  * @author deepanshu961@gmail.com
  * @version 1
  */
 @Entity
-@Table(name = "USER_T")
+@Table(name = "USER_T", schema = "logistics")
+@EnableAutoConfiguration
 @NoArgsConstructor
 @Getter
 public class User implements Serializable {
